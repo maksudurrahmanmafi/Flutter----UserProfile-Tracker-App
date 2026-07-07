@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   boxShadow: [
                     BoxShadow(
                       color: const Color(0xFF6A1B29).withOpacity(0.3),
-                      blurRadius: 12,
+                      blurRadius: 13,
                       offset: const Offset(0, 6),
                     )
                   ],
@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    Text('All user : ${userList.length} ', style: TextStyle(
+                    Text('All users : ${userList.length} ', style: TextStyle(
                         color: Colors.white.withOpacity(0.7),
                         fontSize: 14,
                         fontWeight: FontWeight.w500),),
