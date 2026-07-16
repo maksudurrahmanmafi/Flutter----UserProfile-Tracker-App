@@ -235,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           subtitle: Text(
                             userList[index][DbHelper.COLUMN_EMAIL] ?? '',
-                            style: const TextStyle(color: Colors.white80),
+                            style: const TextStyle(color: Colors.white38),
                           ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text(
-                                          'User deleted successfully!!')),
+                                          'User deleted successfully!')),
                                     );
                                   }
                                 }

@@ -48,9 +48,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  static const String LOGIN_KEY = 'isLogin';
-  static const String USERNAME_KEY = 'username';
-  static const String THEME_KEY = 'isDarkMode';
+  static const String LOGIN_KEY = 'ISLOGIN';
+  static const String USERNAME_KEY = 'USERNAME';
+  static const String THEME_KEY = 'isDARCK';
 
   bool isShowPassword = true; //dot dot dekhabe
   var PasswordController = TextEditingController();
