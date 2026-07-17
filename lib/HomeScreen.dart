@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void loadUser() async {
-    userList = await dbRef.FetchAllNote();
+    userList = await dbRef.fetchAllNotes();
     setState(() {
 
     });

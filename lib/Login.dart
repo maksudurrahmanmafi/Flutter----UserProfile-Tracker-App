@@ -48,7 +48,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  static const String LOGIN_KEY = 'ISLOGIN';
+  static const String LOGIN_KEY = 'IsLOGIN';
   static const String USERNAME_KEY = 'USERNAME';
   static const String THEME_KEY = 'isDARCK';
 

@@ -1,80 +1,67 @@
 import 'dart:io';
-
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:path_provider/path_provider.dart'; // ১. এটি ইমপোর্ট করতে হবে
+import 'package:sqflite/sqflite.dart'; // ২. এটি ইমপোর্ট করতে হবে
 
 class DbHelper {
-  // ১. প্রাইভেট কনস্ট্রাক্টর (যাতে বাইরে থেকে এই ক্লাসের অবজেক্ট তৈরি করা না যায়)
+  // প্রাইভেট কনস্ট্রাক্টর
   DbHelper._();
 
-  //static final ektdhoroner instane,, class er object create kora sarai access kora jai..singletone
-
+  // সিঙ্গেলটন ইন্সট্যান্স
   static final DbHelper getInstance = DbHelper._();
 
-  static final TABLE_NAME = 'user';
-  static final COLUMN_ID = 'id';
-  static final COLUMN_USER_NAME = 'name';
-  static final COLUMN_EMAIL = 'email';
-  static final COLUMN_ADDRESS = 'address';
+  static const String TABLE_NAME = 'user';
+  static const String COLUMN_ID = 'id';
+  static const String COLUMN_USER_NAME = 'name';
+  static const String COLUMN_EMAIL = 'email';
+  static const String COLUMN_ADDRESS = 'address';
 
-  // ৪. ডাটাবেজ অবজেক্ট হোল্ডার (শুরুতে এটি null থাকবে)
   Database? myDb;
 
   Future<Database> getDb() async {
     myDb = myDb ?? await openDb();
     return myDb!;
-    /*if(myDb != null){
-      return myDb!;
-    }
-    else{
-      myDb = await openDb();
-      return myDb!;
-    }*/
   }
 
   Future<Database> openDb() async {
-    // ফোনের ভেতরে অ্যাপের জন্য নিরাপদ ডিরেক্টরি বা ফোল্ডার খুঁজে বের করা
     Directory appDir = await getApplicationDocumentsDirectory();
-    String dbpath = join(appDir.path, "user_db");
-    // ডাটাবেজ ওপেন করা (প্রথমবার হলে onCreate রান হবে)
+    // ডাটাবেজের একটি সঠিক নাম দিন এক্সটেনশনসহ (যেমন: user_db.db)
+    String dbpath = join(appDir.path, "user_db.db");
+
     return await openDatabase(
       dbpath,
       version: 1,
       onCreate: (db, version) {
         db.execute(
-          "create table $TABLE_NAME ($COLUMN_ID integer primary key autoincrement,$COLUMN_USER_NAME text,$COLUMN_EMAIL text,$COLUMN_ADDRESS text)",
+          "CREATE TABLE $TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_USER_NAME TEXT, $COLUMN_EMAIL TEXT, $COLUMN_ADDRESS TEXT)",
         );
       },
     );
   }
 
-  //insert
-
+  // Insert Data
   Future<bool> addNote({
     required String mName,
     required String mEmail,
-    required String mAddress
+    required String mAddress,
   }) async {
     var db = await getDb();
     int rowsEffected = await db.insert(TABLE_NAME, {
-      COLUMN_USER_NAME : mName,
-      COLUMN_EMAIL : mEmail,
-      COLUMN_ADDRESS :mAddress
+      COLUMN_USER_NAME: mName,
+      COLUMN_EMAIL: mEmail,
+      COLUMN_ADDRESS: mAddress,
     });
     return rowsEffected > 0;
   }
 
-  //fetch data\
-
-  Future<List<Map<String, dynamic>>> FetchAllNote() async {
+  // Fetch Data (মেথডের নাম ছোট হাতের অক্ষরে পরিবর্তন করা হয়েছে)
+  Future<List<Map<String, dynamic>>> fetchAllNotes() async {
     var db = await getDb();
-    //select from note
-    List<Map<String, dynamic>> mData = await db.query(TABLE_NAME,orderBy: "$COLUMN_ID DESC");
+    List<Map<String, dynamic>> mData = await db.query(TABLE_NAME, orderBy: "$COLUMN_ID DESC");
     return mData;
   }
 
-  //update data
+  // Update Data (whereArgs ব্যবহার করে সুরক্ষিত করা হয়েছে)
   Future<bool> updateData({
     required String mName,
     required String mEmail,
@@ -82,22 +69,27 @@ class DbHelper {
     required int id,
   }) async {
     var db = await getDb();
-    int rowsEffected = await db.update(TABLE_NAME, {
-      COLUMN_USER_NAME : mName,
-      COLUMN_EMAIL : mEmail,
-      COLUMN_ADDRESS : mAddress,
-    }, where: "$COLUMN_ID = $id");
+    int rowsEffected = await db.update(
+      TABLE_NAME,
+      {
+        COLUMN_USER_NAME: mName,
+        COLUMN_EMAIL: mEmail,
+        COLUMN_ADDRESS: mAddress,
+      },
+      where: "$COLUMN_ID = ?", // সরাসরি $id না বসিয়ে '?' দেওয়া নিরাপদ
+      whereArgs: [id],
+    );
     return rowsEffected > 0;
   }
 
-  //delete data
+  // Delete Data
   Future<bool> deleteData({required int id}) async {
     var db = await getDb();
-    int rowseffect = await db.delete(
+    int rowsEffected = await db.delete(
       TABLE_NAME,
-      where: "$COLUMN_ID = ? ",
+      where: "$COLUMN_ID = ?",
       whereArgs: [id],
     );
-    return rowseffect > 0;
+    return rowsEffected > 0;
   }
 }
