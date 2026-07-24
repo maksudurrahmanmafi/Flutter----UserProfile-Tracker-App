@@ -1,13 +1,11 @@
 import 'dart:io';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart'; // ১. এটি ইমপোর্ট করতে হবে
-import 'package:sqflite/sqflite.dart'; // ২. এটি ইমপোর্ট করতে হবে
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DbHelper {
-  // প্রাইভেট কনস্ট্রাক্টর
   DbHelper._();
 
-  // সিঙ্গেলটন ইন্সট্যান্স
   static final DbHelper getInstance = DbHelper._();
 
   static const String TABLE_NAME = 'user';
@@ -25,7 +23,6 @@ class DbHelper {
 
   Future<Database> openDb() async {
     Directory appDir = await getApplicationDocumentsDirectory();
-    // ডাটাবেজের একটি সঠিক নাম দিন এক্সটেনশনসহ (যেমন: user_db.db)
     String dbpath = join(appDir.path, "user_db.db");
 
     return await openDatabase(
@@ -54,14 +51,12 @@ class DbHelper {
     return rowsEffected > 0;
   }
 
-  // Fetch Data (মেথডের নাম ছোট হাতের অক্ষরে পরিবর্তন করা হয়েছে)
   Future<List<Map<String, dynamic>>> fetchAllNotes() async {
     var db = await getDb();
     List<Map<String, dynamic>> mData = await db.query(TABLE_NAME, orderBy: "$COLUMN_ID DESC");
     return mData;
   }
 
-  // Update Data (whereArgs ব্যবহার করে সুরক্ষিত করা হয়েছে)
   Future<bool> updateData({
     required String mName,
     required String mEmail,
@@ -76,13 +71,12 @@ class DbHelper {
         COLUMN_EMAIL: mEmail,
         COLUMN_ADDRESS: mAddress,
       },
-      where: "$COLUMN_ID = ?", // সরাসরি $id না বসিয়ে '?' দেওয়া নিরাপদ
+      where: "$COLUMN_ID = ?",
       whereArgs: [id],
     );
     return rowsEffected > 0;
   }
 
-  // Delete Data
   Future<bool> deleteData({required int id}) async {
     var db = await getDb();
     int rowsEffected = await db.delete(
